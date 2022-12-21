@@ -2,6 +2,8 @@
 
 int main(int argc, char const *argv[])
 {
+    //lol XD
+
     printf("\033[0;30m");
     printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
     printf("\033[1;31m");
