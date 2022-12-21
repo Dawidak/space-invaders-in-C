@@ -10,6 +10,8 @@ int main(int argc, char const *argv[])
     printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
     printf("\033[0;33m");
     printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
+    //vhsfjlkmjnb gvklsdhj bklfdh iklfsjb klrged jbvsdx
+    //gfbdsujoigbhsedioghbjoi;edshp;
     printf("\033[0;34m");
     printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
     printf("\033[0;35m");
