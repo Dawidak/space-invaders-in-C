@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <stdlib.h>
 int main(int argc, char const *argv[])
 {
     //lol XD
@@ -24,5 +24,6 @@ int main(int argc, char const *argv[])
     printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
     printf("\033[0m");
     printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
+    system("pause");
     return 0;
 }

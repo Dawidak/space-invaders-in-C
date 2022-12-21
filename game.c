@@ -3,11 +3,12 @@
 #include <string.h>
 #define windoWidth 21
 #define windowHeight 15
-#define hudHeight 3
+#define hudHeight 1
 
 typedef struct{
     int x, y;
     int hp;
+    int score;
 } player;
 
 typedef struct{
@@ -23,10 +24,8 @@ typedef struct{
     int hit;
 } bullet;
 
-void box(int ekran[][windoWidth]){
-    for (int i = 0; i < windowHeight; i++){for (int j = 0; j < windoWidth; j++){ekran[i][j] = 254;}} 
-    for (int i = 1; i < windowHeight-1; i++){for (int j = 1; j < windoWidth-1; j++){ekran[i][j] = 45;}}
-}
+
+
 
 void line(int znak, int dlugosc,const char how[]){
     if(how=="style"){
@@ -36,8 +35,8 @@ void line(int znak, int dlugosc,const char how[]){
     printf("\n");
 }
 
-void display(int ekran[][windoWidth],int hud[][windoWidth],const char how[] ){
-    //box(ekran);
+void displayGame(int ekran[][windoWidth],const char how[] ){
+    
     printf(how,219);
     line(254,windoWidth+1,how);
     
@@ -51,28 +50,66 @@ void display(int ekran[][windoWidth],int hud[][windoWidth],const char how[] ){
         printf(how,219);
         printf("\n");
     }
-printf(how,219);
+
+    printf(how,219);
     line(254,windoWidth+1,how);
 
+}
+
+void displayHud(int hud[][windoWidth],int health,const char how[]){
+ 
+    hud[0][1] = 72;
+    hud[0][2] = 80;
+    hud[0][3] = 222;
+ 
+    switch (health)
+    {
+    case 1:
+        hud[0][5]=003;
+        hud[0][6]=32;
+        hud[0][7]=32;
+    case 2:
+        hud[0][5]=003;
+        hud[0][6]=003;
+        hud[0][7]=32;
+    case 3:
+        hud[0][5]=003;
+        hud[0][6]=003;
+        hud[0][7]=003;
+        break;
+    }
+   
+    
     for (int i = 0; i < hudHeight; i++){
         printf(how,219);
         
         for (int j = 0; j < windoWidth; j++){
-            printf(how,ekran[i][j]);
+            //if(hud[i][j]==222){printf(":");}
+            //else{
+                printf(how,hud[i][j]);
+                //}
         }
         
         printf(how,219);
         printf("\n");
     }
+
     printf(how,219);
     line(254,windoWidth+1,how);
+
 }
+
 
 int main (int argc, char *argv[]) {
     int ekran[windowHeight][windoWidth]={0},
-        hud  [hudHeight][windoWidth]={0};
-    display(ekran,hud,"%3d");
-    display(ekran,hud,"%c");
+        hud  [hudHeight]   [windoWidth]={0};
+    
+    player ship;
+    ship.hp = 3;
+    displayGame(ekran,"%3d");
+    displayHud(hud,ship.hp,"%3d");
+    //displayGame(ekran,"%c");
+    //displayHud(hud,ship.hp,"%c");
     
     system("pause");
     return EXIT_SUCCESS;
