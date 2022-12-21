@@ -5,6 +5,23 @@
 #define windowHeight 15
 #define hudHeight 3
 
+typedef struct{
+    int x, y;
+    int hp;
+} player;
+
+typedef struct{
+    int x, y;
+    int hp;
+    int dead;
+} enemy;
+
+typedef struct{
+    int x, y;
+    int dmg;
+    int speed;
+    int hit;
+} bullet;
 
 void box(int ekran[][windoWidth]){
     for (int i = 0; i < windowHeight; i++){for (int j = 0; j < windoWidth; j++){ekran[i][j] = 254;}} 
