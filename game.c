@@ -10,16 +10,16 @@ void box(int ekran[][windoWidth]){
     for (int i = 1; i < windowHeight-1; i++){for (int j = 1; j < windoWidth-1; j++){ekran[i][j] = 45;}}
 }
 
-void line(int znak, int dlugosc,const char how[]){
+void line(int znak, int dlugosc,const char how[],const char color[]){
     if(how=="style"){
         printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
-    }else{for (int i = 0; i < dlugosc; i++){printf(how,znak);}}
+    }else{for (int i = 0; i < dlugosc; i++){printf(color);printf(how,znak);}}
     printf("\n");
 }
 
 void display(int ekran[][windoWidth],int hud[][windoWidth],const char how[] ){
     //box(ekran);
-    line(219,windoWidth+2,how);
+    line(219,windoWidth+2,how,"\033[1;31m");
     
     for (int i = 0; i < windowHeight; i++){
         printf(how,219);
@@ -32,7 +32,7 @@ void display(int ekran[][windoWidth],int hud[][windoWidth],const char how[] ){
         printf("\n");
     }
 
-    line(219,windoWidth+2,how);
+    line(219,windoWidth+2,how,"");
 
     for (int i = 0; i < hudHeight; i++){
         printf(how,219);
@@ -45,7 +45,7 @@ void display(int ekran[][windoWidth],int hud[][windoWidth],const char how[] ){
         printf("\n");
     }
     
-    line(219,windoWidth+2,how);
+    line(219,windoWidth+2,how,"");
 }
 
 int main (int argc, char *argv[]) {
