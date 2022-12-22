@@ -6,14 +6,20 @@
 #define hudHeight 1
 
 typedef struct{
+    //position
     int x, y;
+    //hit points
     int hp;
+    //score
     int score;
 } player;
 
 typedef struct{
+    //podition
     int x, y;
+    //hit points
     int hp;
+    //status 1 for dead, 0 for alive
     int dead;
 } enemy;
 
@@ -25,7 +31,7 @@ typedef struct{
 } bullet;
 
 player ship;
-
+    
 //procedura do odtwarzania muzyki
 void music(){
     system("START /MIN CMD.EXE /C audio.bat");
@@ -42,8 +48,10 @@ void line(int znak, int dlugosc,const char how[]){
 
 //procedura do wyswietlania "klatki" ekranu z akcja
 void displayGame(int ekran[][windoWidth],const char how[] ){
-    
+    ship.x = 3;
+    ship.y = 4;
     system("cls");
+    ekran[ship.x][ship.y]==69;
 
     if(ship.hp == 0) printf("\033[0;30m"); //czarny tekst if ded gracz
 
@@ -57,7 +65,7 @@ void displayGame(int ekran[][windoWidth],const char how[] ){
             printf("\033[1;31m     GAME OVER      \033[0;30m ");
         else
             for (int j = 0; j < windoWidth; j++){
-                if(ekran[i][j] == 0) printf(" ");
+                if(ekran[i][j] == 0){printf(how,ekran[i][j]);}
                 else printf(how,ekran[i][j]);
             }
         
@@ -155,9 +163,9 @@ void gameGame(const char music[],const char mode[]){
     int ekran[windowHeight][windoWidth]={0},
         hud  [hudHeight]   [windoWidth]={0};
     ship.hp = 3;
-    
+
     displayGame(ekran,mode);
-    displayHud(hud,ship.hp,mode);
+    //displayHud(hud,ship.hp,mode);
 }
 
 //ekran game over
@@ -171,6 +179,13 @@ int main (int argc, char *argv[]) {
     gameGame("muted","%c");
 
 
+<<<<<<< Updated upstream
+=======
+
+    //char input = '0';
+    //input = getch();
+    //printf("%c", input);
+>>>>>>> Stashed changes
     //system("pause");
     return EXIT_SUCCESS;
 }
