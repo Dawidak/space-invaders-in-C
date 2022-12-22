@@ -24,6 +24,8 @@ typedef struct{
     int hit;
 } bullet;
 
+player ship;
+
 //procedura do odtwarzania muzyki
 void music(){
     system("START /MIN CMD.EXE /C audio.bat");
@@ -41,15 +43,23 @@ void line(int znak, int dlugosc,const char how[]){
 //procedura do wyswietlania "klatki" ekranu z akcja
 void displayGame(int ekran[][windoWidth],const char how[] ){
     
+    system("cls");
+
+    if(ship.hp == 0) printf("\033[0;30m"); //czarny tekst if ded gracz
+
     printf(how,219);
     line(254,windoWidth+1,how);
-    
+
     for (int i = 0; i < windowHeight; i++){
         printf(how,219);
         
-        for (int j = 0; j < windoWidth; j++){
-            printf(how,ekran[i][j]);
-        }
+        if(i == 7 && ship.hp == 0) //czerwony game over if ded gracz
+            printf("\033[1;31m     GAME OVER      \033[0;30m ");
+        else
+            for (int j = 0; j < windoWidth; j++){
+                if(ekran[i][j] == 0) printf(" ");
+                else printf(how,ekran[i][j]);
+            }
         
         printf(how,219);
         printf("\n");
@@ -73,10 +83,12 @@ void displayHud(int hud[][windoWidth],int health,const char how[]){
         hud[0][5]=003;
         hud[0][6]=32;
         hud[0][7]=32;
+        break;
     case 2:
         hud[0][5]=003;
         hud[0][6]=003;
         hud[0][7]=32;
+        break;
     case 3:
         hud[0][5]=003;
         hud[0][6]=003;
@@ -89,11 +101,13 @@ void displayHud(int hud[][windoWidth],int health,const char how[]){
         printf(how,219);
         
         for (int j = 0; j < windoWidth; j++){
-            //if(hud[i][j]==222){printf(":");}
-            //else{
-                printf(how,hud[i][j]);
-                //}
+            if(hud[i][j]==222){printf(" \033[1;31m");}
+            else{
+                if(hud[i][j] == 0) printf(" ");
+                else printf(how,hud[i][j]);
+            }
         }
+        printf("\033[0m"); //idk how but it doesn't wor eather way
         
         printf(how,219);
         printf("\n");
@@ -119,8 +133,7 @@ void gameGame(const char music[],const char mode[]){
     
     int ekran[windowHeight][windoWidth]={0},
         hud  [hudHeight]   [windoWidth]={0};
-    player ship;
-    ship.hp = 3;    
+    ship.hp = 0;
     
     displayGame(ekran,mode);
     displayHud(hud,ship.hp,mode);
@@ -132,12 +145,13 @@ void gameOver(const char music[],const char mode[]){}
 // tu testujemy funkcje lub odpalamy kombajn
 int main (int argc, char *argv[]) {
 
-    gameGame("muted","%3d");
-    gameWelcome("muted","%3d");
+    gameGame("muted","%c");  //%3d dla cyferek
+    gameWelcome("muted","%c"); // to co wyżej
 
 
-    
-    
-    system("pause");
+    char input = '0';
+    input = getch();
+    //printf("%c", input);
+    //system("pause");
     return EXIT_SUCCESS;
 }
