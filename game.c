@@ -120,10 +120,28 @@ void displayHud(int hud[][windoWidth],int health,const char how[]){
 
 //ekran startowy dla gry
 void gameWelcome(const char sound[],const char mode[]){
-    if (sound=="unmuted"){music();}
-    line(219,windoWidth+2,mode);
-    printf(mode,219); printf("     C INVADERS      ");printf("%c\n",219);
-    printf(mode,219);line(254,windoWidth+1,mode);
+    if (sound=="muted"){music();}
+    int height = 6;
+    char colors[] = "#50C1D9";
+
+    for (int i = 0; i < height; i++)
+    {
+        system("cls");
+
+        for (int j = 0; j < i; j++){printf("\n");}
+        
+        printf("       C INVADERS       \n\n\n\n\n");
+        
+        if(i%2==0){system("color 70");}
+        else{system("color 07");}
+        
+        for (int j = 0; j < height-i; j++){printf("\n");}
+        
+        system("timeout 1 > NUL");
+    }
+    system("color 07");
+    system("timeout 2 > NUL");
+    
     
 }
 
@@ -145,12 +163,12 @@ void gameOver(const char music[],const char mode[]){}
 // tu testujemy funkcje lub odpalamy kombajn
 int main (int argc, char *argv[]) {
 
-    gameGame("muted","%c");  //%3d dla cyferek
-    gameWelcome("muted","%c"); // to co wyżej
+    //gameGame("muted","%c");  //%3d dla cyferek | %c dla znakow
+    gameWelcome("unmuted","%c"); // to co wyżej
+    gameGame("muted","%c");
 
-
-    char input = '0';
-    input = getch();
+    //char input = '0';
+    //input = getch();
     //printf("%c", input);
     //system("pause");
     return EXIT_SUCCESS;
