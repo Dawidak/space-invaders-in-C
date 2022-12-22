@@ -124,6 +124,7 @@ void gameWelcome(const char sound[],const char mode[]){
     int height = 6;
     char colors[] = "#50C1D9";
 
+    //animacja włączenia
     for (int i = 0; i < height; i++)
     {
         system("cls");
