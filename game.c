@@ -94,6 +94,9 @@ void displayHud(int hud[][windoWidth],int health,const char how[]){
         hud[0][6]=003;
         hud[0][7]=003;
         break;
+    default:
+        
+        break;
     }
    
     
@@ -124,7 +127,6 @@ void gameWelcome(const char sound[],const char mode[]){
     int height = 6;
     char colors[] = "#50C1D9";
 
-    //animacja włączenia
     for (int i = 0; i < height; i++)
     {
         system("cls");
@@ -165,12 +167,10 @@ void gameOver(const char music[],const char mode[]){}
 int main (int argc, char *argv[]) {
 
     //gameGame("muted","%c");  //%3d dla cyferek | %c dla znakow
-    gameWelcome("unmuted","%c"); // to co wyżej
+    //gameWelcome("unmuted","%c"); // to co wyżej
     gameGame("muted","%c");
 
-    //char input = '0';
-    //input = getch();
-    //printf("%c", input);
+
     //system("pause");
     return EXIT_SUCCESS;
 }
