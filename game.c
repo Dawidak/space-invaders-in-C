@@ -101,13 +101,13 @@ void displayHud(int hud[][windoWidth],int health,const char how[]){
         printf(how,219);
         
         for (int j = 0; j < windoWidth; j++){
-            if(hud[i][j]==222){printf(" \033[1;31m");}
+            if(hud[i][j]==222 && ship.hp != 0){printf(" \033[1;31m");}
             else{
                 if(hud[i][j] == 0) printf(" ");
                 else printf(how,hud[i][j]);
             }
         }
-        printf("\033[0m"); //idk how but it doesn't wor eather way
+        if(ship.hp != 0) printf("\033[0m"); //idk how but it doesn't wor eather way
         
         printf(how,219);
         printf("\n");
@@ -133,7 +133,7 @@ void gameGame(const char music[],const char mode[]){
     
     int ekran[windowHeight][windoWidth]={0},
         hud  [hudHeight]   [windoWidth]={0};
-    ship.hp = 0;
+    ship.hp = 3;
     
     displayGame(ekran,mode);
     displayHud(hud,ship.hp,mode);
