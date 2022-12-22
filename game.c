@@ -24,9 +24,12 @@ typedef struct{
     int hit;
 } bullet;
 
+//procedura do odtwarzania muzyki
+void music(){
+    system("START /MIN CMD.EXE /C audio.bat");
+}
 
-
-
+//procedura do twarzenia linii
 void line(int znak, int dlugosc,const char how[]){
     if(how=="style"){
         printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
@@ -35,6 +38,7 @@ void line(int znak, int dlugosc,const char how[]){
     printf("\n");
 }
 
+//procedura do wyswietlania "klatki" ekranu z akcja
 void displayGame(int ekran[][windoWidth],const char how[] ){
     
     printf(how,219);
@@ -56,6 +60,7 @@ void displayGame(int ekran[][windoWidth],const char how[] ){
 
 }
 
+//procedura do wyswietlania "klatki" ekranu z HUD-em
 void displayHud(int hud[][windoWidth],int health,const char how[]){
  
     hud[0][1] = 72;
@@ -99,17 +104,39 @@ void displayHud(int hud[][windoWidth],int health,const char how[]){
 
 }
 
+//ekran startowy dla gry
+void gameWelcome(const char sound[],const char mode[]){
+    if (sound=="unmuted"){music();}
+    line(219,windoWidth+2,mode);
+    printf(mode,219); printf("     C INVADERS      ");printf("%c\n",219);
+    printf(mode,219);line(254,windoWidth+1,mode);
+    
+}
 
-int main (int argc, char *argv[]) {
+//funkcja z przebiegiem gry
+//cale badziewie tu ma byc
+void gameGame(const char music[],const char mode[]){
+    
     int ekran[windowHeight][windoWidth]={0},
         hud  [hudHeight]   [windoWidth]={0};
-    
     player ship;
-    ship.hp = 3;
-    displayGame(ekran,"%3d");
-    displayHud(hud,ship.hp,"%3d");
-    //displayGame(ekran,"%c");
-    //displayHud(hud,ship.hp,"%c");
+    ship.hp = 3;    
+    
+    displayGame(ekran,mode);
+    displayHud(hud,ship.hp,mode);
+}
+
+//ekran game over
+void gameOver(const char music[],const char mode[]){}
+
+// tu testujemy funkcje lub odpalamy kombajn
+int main (int argc, char *argv[]) {
+
+    gameGame("muted","%3d");
+    gameWelcome("muted","%3d");
+
+
+    
     
     system("pause");
     return EXIT_SUCCESS;
