@@ -51,13 +51,16 @@ typedef struct{
     int x, y;
     //how much gamage
     int dmg;
-    //speeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed
+    //speeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed (how many +y)
     int speed;
     //if hit something and "dead"
     int hit;
 } bullet;
 
+//tworenie globalnie dostępnych: gracza, tablicy wrogów i tablicy pocisków
 player ship;
+enemy horde[20];
+bullet bullets[15];
 
 //procedura do twarzenia linii poziomych
 // znak podaj w ascii
@@ -246,3 +249,14 @@ int main (int argc, char *argv[]) {
     //system("pause");
     return EXIT_SUCCESS;
 }
+
+/*
+Logika gry:
+    Wyświetla sie ekran
+    Gracz klika co chce zrobić (lewo, prawo, strzał)
+    if lewo lub prawo: movePlayer(char input) zamienia w ekranie pozycję gracza na puste pole, przesuwa gracza jeśli jest taka możliwość, a następnie wpisuje w ekranie, w tym miejscu statek
+    if strzał: PlayerShoot() sprawdza czy może strzelić, tworzy nowy pocisk w tablicy i wpisuje go do ekranu
+    Nastepnie moveBullets() pętlą szuka lecących pocisków i przesuwa je tak samo jak gracza, ale w osi Y. Dodatkowo sprawdza czy w nowym miejscu nie ma przeciwnika i jesli jest, to szuka przeciwnika o danej pozycji w horde[] i ded = 1
+    Następnie moveAI(int i) pętlą przesuwa każdego przeciwnika w dół, tak samo jak gracza, jeśli i >= 3
+    Powrót do początku
+*/
