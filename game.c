@@ -13,9 +13,10 @@
 #define hudHeight 1
 
 //definy dotyczace dzwieku
+// Czy muzyka wlaczona 1 TRUE 0 FALSE
 #define musicON 1
 #define musicLocation "space_invaders_loop.mp3"
-#define death "deadth.wav"
+#define death "death.wav"
 
 typedef struct{
     //position
@@ -52,26 +53,24 @@ void line(int znak, int dlugosc){
     printf("\n");
 }
 
+void ascii(){
+    for (int i = 33; i < 300; i++)
+    {printf("%d %c \n",i,i);}
+};
+
 //procedura do wyswietlania "klatki" ekranu z akcja
 void displayGame(int ekran[][windoWidth]){
-    ship.x = 3;
-    ship.y = 4;
     system("cls");
-    ekran[ship.x][ship.y]==69;
-
-    if(ship.hp == 0) printf("\033[0;30m"); //czarny tekst if ded gracz
 
     printf(displayMode,219);
     line(254,windoWidth+1);
 
     for (int i = 0; i < windowHeight; i++){
-        printf(displayMode,219);
         
-        if(i == 7 && ship.hp == 0) //czerwony game over if ded gracz
-            printf("\033[1;31m     GAME OVER      \033[0;30m ");
-        else
+        printf(displayMode,219);
+
             for (int j = 0; j < windoWidth; j++){
-                if(ekran[i][j] == 0){printf(displayMode,ekran[i][j]);}
+                if(ekran[i][j] == 0){printf(displayMode,ekran[i][j]+32);}
                 else printf(displayMode,ekran[i][j]);
             }
         
@@ -162,28 +161,20 @@ void gameWelcome(){
     
 }
 
-//funkcja z przebiegiem gry
-//cale badziewie tu ma byc
-void gameGame(const char music[]){
-    
-    int ekran[windowHeight][windoWidth]={0},
-        hud  [hudHeight]   [windoWidth]={0};
-    ship.hp = 3;
-
-    displayGame(ekran);
-    //displayHud(hud,ship.hp);
-}
-
 //ekran game over
 void gameOver(const char music[]){}
 
 // tu testujemy funkcje lub odpalamy kombajn
 int main (int argc, char *argv[]) {
+    int ekranGry[windowHeight][windoWidth] = {0},
+        ekranHud[hudHeight][windoWidth] = {0};
+    ship.hp = 3;
 
-    //gameGame("muted","%c");  //%3d dla cyferek | %c dla znakow
-    //gameWelcome("unmuted","%c"); // to co wyżej
-    gameGame("muted");
+    //displayGame(ekranGry);
+    //displayHud(ekranHud,ship.hp);
 
+    ascii();
+    
 
     //system("pause");
     return EXIT_SUCCESS;

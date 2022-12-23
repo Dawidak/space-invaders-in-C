@@ -32,9 +32,18 @@ typedef struct bullet
 }bullet;
 
 void musicPlay(const int sciezka){}
-void displayGame(int ekran[][windowWidth]){}
-void displayMenu(int ekran[][windowWidth]){}
-void generateEkran(){}
+
+void displayGame          (int ekran[][windowWidth]){}
+
+void displayMenu          (int ekran[][windowWidth]){}
+
+void generateGameEkran    (int ekran[][windowWidth]){}
+
+void generateWelcomeEkran (int ekran[][windowWidth]){}
+
+void generateHowEkran     (int ekran[][windowWidth]){
+    
+}
 
 
 int main (int argc, char *argv[]) {
