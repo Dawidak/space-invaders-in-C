@@ -1,29 +1,42 @@
+//plik testowy
 #include <stdio.h>
 #include <stdlib.h>
-int main(int argc, char const *argv[])
-{
-    //lol XD
+#define hudHeight 1
+#define windowWidth 21
+#define windowHeight 15
+#define displayMode "%3d"
+#define music "space_invaders_loop.mp3"
+#define death "deadth.wav"
 
-    printf("\033[0;30m");
-    printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
-    printf("\033[1;31m");
-    printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
-    printf("\033[0;32m");
-    printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
-    printf("\033[0;33m");
-    printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
-    //vhsfjlkmjnb gvklsdhj bklfdh iklfsjb klrged jbvsdx
-    //gfbdsujoigbhsedioghbjoi;edshp;
-    printf("\033[0;34m");
-    printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
-    printf("\033[0;35m");
-    printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
-    printf("\033[0;36m");
-    printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
-    printf("\033[0;37m");
-    printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
-    printf("\033[0m");
-    printf("%c%c%c%c%c%c%c \n", 219,219,219,219,219,219,219);
-    system("pause");
-    return 0;
+typedef struct player{
+    int positionX,
+        positionY,
+        hitPoints,
+        score;
+}player;
+
+typedef struct enemy{
+    int positionX,
+        positionY,
+        hitPoints,
+        status,
+        type;
+}enemy;
+
+typedef struct bullet
+{
+    int positionX,
+        positionY,
+        damage,
+        speed;
+}bullet;
+
+void musicPlay(const int sciezka){}
+void displayGame(int ekran[][windowWidth]){}
+void displayMenu(int ekran[][windowWidth]){}
+void generateEkran(){}
+
+
+int main (int argc, char *argv[]) {
+    return EXIT_SUCCESS;
 }

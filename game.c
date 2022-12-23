@@ -1,9 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+//Tryb wyswietlania
+#define displayMode "%c"
+
+//rozmiary obszarow roboczych
+//rozmiar ekranu gry -> windowHeight x windowWidth
+//rozmiar HUD -> hudHeight x windowWidth
 #define windoWidth 21
 #define windowHeight 15
 #define hudHeight 1
+
+//definy dotyczace dzwieku
+#define musicON 1
+#define musicLocation "space_invaders_loop.mp3"
+#define death "deadth.wav"
 
 typedef struct{
     //position
@@ -31,23 +43,17 @@ typedef struct{
 } bullet;
 
 player ship;
-    
-//procedura do odtwarzania muzyki
-void music(){
-    system("START /MIN CMD.EXE /C audio.bat");
-}
 
-//procedura do twarzenia linii
-void line(int znak, int dlugosc,const char how[]){
-    if(how=="style"){
-        printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=");
-    }else{for (int i = 1; i < dlugosc; i++){printf(how,znak);}}
-    printf(how,219);
+//procedura do twarzenia linii poziomych
+// znak podaj w ascii
+void line(int znak, int dlugosc){
+    for (int i = 1; i < dlugosc; i++){printf(displayMode,znak);}
+    printf(displayMode,219);
     printf("\n");
 }
 
 //procedura do wyswietlania "klatki" ekranu z akcja
-void displayGame(int ekran[][windoWidth],const char how[] ){
+void displayGame(int ekran[][windoWidth]){
     ship.x = 3;
     ship.y = 4;
     system("cls");
@@ -55,31 +61,31 @@ void displayGame(int ekran[][windoWidth],const char how[] ){
 
     if(ship.hp == 0) printf("\033[0;30m"); //czarny tekst if ded gracz
 
-    printf(how,219);
-    line(254,windoWidth+1,how);
+    printf(displayMode,219);
+    line(254,windoWidth+1);
 
     for (int i = 0; i < windowHeight; i++){
-        printf(how,219);
+        printf(displayMode,219);
         
         if(i == 7 && ship.hp == 0) //czerwony game over if ded gracz
             printf("\033[1;31m     GAME OVER      \033[0;30m ");
         else
             for (int j = 0; j < windoWidth; j++){
-                if(ekran[i][j] == 0){printf(how,ekran[i][j]);}
-                else printf(how,ekran[i][j]);
+                if(ekran[i][j] == 0){printf(displayMode,ekran[i][j]);}
+                else printf(displayMode,ekran[i][j]);
             }
         
-        printf(how,219);
+        printf(displayMode,219);
         printf("\n");
     }
 
-    printf(how,219);
-    line(254,windoWidth+1,how);
+    printf(displayMode,219);
+    line(254,windoWidth+1);
 
 }
 
 //procedura do wyswietlania "klatki" ekranu z HUD-em
-void displayHud(int hud[][windoWidth],int health,const char how[]){
+void displayHud(int hud[][windoWidth],int health){
  
     hud[0][1] = 72;
     hud[0][2] = 80;
@@ -109,29 +115,29 @@ void displayHud(int hud[][windoWidth],int health,const char how[]){
    
     
     for (int i = 0; i < hudHeight; i++){
-        printf(how,219);
+        printf(displayMode,219);
         
         for (int j = 0; j < windoWidth; j++){
             if(hud[i][j]==222 && ship.hp != 0){printf(" \033[1;31m");}
             else{
                 if(hud[i][j] == 0) printf(" ");
-                else printf(how,hud[i][j]);
+                else printf(displayMode,hud[i][j]);
             }
         }
         if(ship.hp != 0) printf("\033[0m"); //idk how but it doesn't wor eather way
         
-        printf(how,219);
+        printf(displayMode,219);
         printf("\n");
     }
 
-    printf(how,219);
-    line(254,windoWidth+1,how);
+    printf(displayMode,219);
+    line(254,windoWidth+1);
 
 }
 
 //ekran startowy dla gry
-void gameWelcome(const char sound[],const char mode[]){
-    if (sound=="muted"){music();}
+void gameWelcome(){
+    
     int height = 6;
     char colors[] = "#50C1D9";
 
@@ -158,34 +164,27 @@ void gameWelcome(const char sound[],const char mode[]){
 
 //funkcja z przebiegiem gry
 //cale badziewie tu ma byc
-void gameGame(const char music[],const char mode[]){
+void gameGame(const char music[]){
     
     int ekran[windowHeight][windoWidth]={0},
         hud  [hudHeight]   [windoWidth]={0};
     ship.hp = 3;
 
-    displayGame(ekran,mode);
-    //displayHud(hud,ship.hp,mode);
+    displayGame(ekran);
+    //displayHud(hud,ship.hp);
 }
 
 //ekran game over
-void gameOver(const char music[],const char mode[]){}
+void gameOver(const char music[]){}
 
 // tu testujemy funkcje lub odpalamy kombajn
 int main (int argc, char *argv[]) {
 
     //gameGame("muted","%c");  //%3d dla cyferek | %c dla znakow
     //gameWelcome("unmuted","%c"); // to co wyżej
-    gameGame("muted","%c");
+    gameGame("muted");
 
 
-<<<<<<< Updated upstream
-=======
-
-    //char input = '0';
-    //input = getch();
-    //printf("%c", input);
->>>>>>> Stashed changes
     //system("pause");
     return EXIT_SUCCESS;
 }
