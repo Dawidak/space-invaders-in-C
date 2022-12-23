@@ -2,6 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+//definy dotyczace dzwieku
+// Czy muzyka wlaczona 1 TRUE 0 FALSE
+#define musicON 1
+#define musicLocation "space_invaders_loop.mp3"
+#define death "death.wav"
+
+/*          *\
+|   OPTIONS  |
+\*          */          
+
 //Tryb wyswietlania
 #define displayMode "%c"
 
@@ -12,15 +22,11 @@
 #define windowHeight 15
 #define hudHeight 1
 
-//definy dotyczace dzwieku
-// Czy muzyka wlaczona 1 TRUE 0 FALSE
-#define musicON 1
-#define musicLocation "space_invaders_loop.mp3"
-#define death "death.wav"
+
 
 typedef struct{
     //position
-    int x, y;
+    int position[1][2];
     //hit points
     int hp;
     //score
@@ -29,7 +35,7 @@ typedef struct{
 
 typedef struct{
     //podition
-    int x, y;
+    int position[1][2];
     //hit points
     int hp;
     //status 1 for dead, 0 for alive
@@ -47,23 +53,30 @@ player ship;
 
 //procedura do twarzenia linii poziomych
 // znak podaj w ascii
-void line(int znak, int dlugosc){
+// newLine czy ma byc nowa linaia
+void line(int znak, int dlugosc,int newLine){
     for (int i = 1; i < dlugosc; i++){printf(displayMode,znak);}
     printf(displayMode,219);
-    printf("\n");
+    if(newLine>0)printf("\n");
 }
 
+//wyswietla znaki ascii z ich liczba
 void ascii(){
     for (int i = 33; i < 300; i++)
     {printf("%d %c \n",i,i);}
 };
+
+//menu
+int displayMenu(){
+    line(34,windoWidth+2,1);
+}
 
 //procedura do wyswietlania "klatki" ekranu z akcja
 void displayGame(int ekran[][windoWidth]){
     system("cls");
 
     printf(displayMode,219);
-    line(254,windoWidth+1);
+    line(254,windoWidth+1,1);
 
     for (int i = 0; i < windowHeight; i++){
         
@@ -79,7 +92,7 @@ void displayGame(int ekran[][windoWidth]){
     }
 
     printf(displayMode,219);
-    line(254,windoWidth+1);
+    line(254,windoWidth+1,1);
 
 }
 
@@ -123,14 +136,14 @@ void displayHud(int hud[][windoWidth],int health){
                 else printf(displayMode,hud[i][j]);
             }
         }
-        if(ship.hp != 0) printf("\033[0m"); //idk how but it doesn't wor eather way
+        if(ship.hp != 0) printf("\033[0m"); //idk how but it doesn't work eather way
         
         printf(displayMode,219);
         printf("\n");
     }
 
     printf(displayMode,219);
-    line(254,windoWidth+1);
+    line(254,windoWidth+1,1);
 
 }
 
@@ -162,18 +175,45 @@ void gameWelcome(){
 }
 
 //ekran game over
-void gameOver(const char music[]){}
+void gameOver(const char music[]){
+    int zmienna = 0,again = 0;
+    
+        printf("\033[1;31m");
+        
+        for (int i = 0; i < windowHeight+3; i++)
+        {
+            //printf("%2d",i);
+            if(i!=8){
+                for (int j = 0; j < windoWidth+2; j++){
+                printf("%c",177);
+                
+
+                }
+            }else{
+                line(177,6,0);
+                printf(" GAME OVER ");
+                line(177,6,0);
+            }
+            printf("\n");
+        
+        }
+        printf("\n");
+    system("pause");
+    system("cls");   
+    printf("\033[0m ");
+
+}
 
 // tu testujemy funkcje lub odpalamy kombajn
 int main (int argc, char *argv[]) {
     int ekranGry[windowHeight][windoWidth] = {0},
         ekranHud[hudHeight][windoWidth] = {0};
     ship.hp = 3;
-
+    displayMenu();
     //displayGame(ekranGry);
     //displayHud(ekranHud,ship.hp);
-
-    ascii();
+    
+    //ascii();
     
 
     //system("pause");
