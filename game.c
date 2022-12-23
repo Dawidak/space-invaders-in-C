@@ -1,19 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <conio.h>
 
 //definy dotyczace dzwieku
 // Czy muzyka wlaczona 1 TRUE 0 FALSE
 #define musicON 1
-#define musicLocation "space_invaders_loop.mp3"
-#define death "death.wav"
+#define musicLocation "mainTheme.bat"
+#define death "mainDeathSound.bat"
+
+//define kolorki
+#define RED "\033[1;31m"
 
 /*          *\
 |   OPTIONS  |
 \*          */          
 
 //Tryb wyswietlania
-#define displayMode "%c"
+#define displayMode "%2c"
 
 //rozmiary obszarow roboczych
 //rozmiar ekranu gry -> windowHeight x windowWidth
@@ -60,15 +64,34 @@ void line(int znak, int dlugosc,int newLine){
     if(newLine>0)printf("\n");
 }
 
-//wyswietla znaki ascii z ich liczba
+//wyswietla znaki ascii z ich kodem
 void ascii(){
     for (int i = 33; i < 300; i++)
     {printf("%d %c \n",i,i);}
 };
 
 //menu
-int displayMenu(){
-    line(34,windoWidth+2,1);
+//zraca wartosc typu int pozyskana od urzytkownika
+char displayMenu(){
+    printf(displayMode,219);line(254,windoWidth+1,1);
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("     C INVADERS      ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);line(254,windoWidth+1,1);
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("  1.How to Play      ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("  2.Graj             ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("  3.Ostatni wynik    ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("  4.Wyjdz            ");printf(displayMode,219);printf("\n");
+    for (int i = 0; i < 7; i++)
+    {
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    }
+    printf(displayMode,219);line(254,windoWidth+1,1);
+    char input = '0';
+    input = getche();
+    return input;
 }
 
 //procedura do wyswietlania "klatki" ekranu z akcja
@@ -130,9 +153,9 @@ void displayHud(int hud[][windoWidth],int health){
         printf(displayMode,219);
         
         for (int j = 0; j < windoWidth; j++){
-            if(hud[i][j]==222 && ship.hp != 0){printf(" \033[1;31m");}
+            if(hud[i][j]==222 && ship.hp != 0){printf(RED);}
             else{
-                if(hud[i][j] == 0) printf(" ");
+                if(hud[i][j] == 0) printf(displayMode,hud[i][j]+32);
                 else printf(displayMode,hud[i][j]);
             }
         }
@@ -207,12 +230,12 @@ void gameOver(const char music[]){
 // tu testujemy funkcje lub odpalamy kombajn
 int main (int argc, char *argv[]) {
     int ekranGry[windowHeight][windoWidth] = {0},
-        ekranHud[hudHeight][windoWidth] = {0};
+        ekranHud[hudHeight][windoWidth+1] = {0};
     ship.hp = 3;
     displayMenu();
-    //displayGame(ekranGry);
-    //displayHud(ekranHud,ship.hp);
-    
+    system("cls");
+    displayGame(ekranGry);
+    displayHud(ekranHud,ship.hp);
     //ascii();
     
 
