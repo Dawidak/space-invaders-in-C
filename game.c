@@ -38,7 +38,7 @@ typedef struct{
 } player;
 
 typedef struct{
-    //podition
+    //position
     int position[1][2];
     //hit points
     int hp;
@@ -47,9 +47,13 @@ typedef struct{
 } enemy;
 
 typedef struct{
+    //position
     int x, y;
+    //how much gamage
     int dmg;
+    //speeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed
     int speed;
+    //if hit something and "dead"
     int hit;
 } bullet;
 
