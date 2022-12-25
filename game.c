@@ -160,7 +160,7 @@ void displayHud(int hud[][windoWidth],int health){
         printf(displayMode,219);
         
         for (int j = 0; j < windoWidth; j++){
-            if(hud[i][j]==222 && ship.hp != 0){printf(RED);}
+            if(hud[i][j]==222 && ship.hp != 0){printf(RED); printf(displayMode, 32);}
             else{
                 if(hud[i][j] == 0) printf(displayMode,hud[i][j]+32);
                 else printf(displayMode,hud[i][j]);
