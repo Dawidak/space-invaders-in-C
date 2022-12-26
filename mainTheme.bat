@@ -1,6 +1,7 @@
 @echo off
-timeout 4>NUL
-START /MIN space_invaders_loop.mp3
-timeout 4>NUL
+:loop
+START "Music" /MIN space_invaders_loop_long.mp3
+timeout 119
+goto loop
 pause
 

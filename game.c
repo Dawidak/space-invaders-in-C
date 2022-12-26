@@ -17,7 +17,7 @@
 \*          */          
 
 //Tryb wyswietlania
-#define displayMode "%2c"
+#define displayMode "%c"
 
 //rozmiary obszarow roboczych
 //rozmiar ekranu gry -> windowHeight x windowWidth
@@ -26,7 +26,7 @@
 #define windowHeight 15
 #define hudHeight 1
 
-
+void killMusic();
 
 typedef struct{
     //position
@@ -239,6 +239,9 @@ int main (int argc, char *argv[]) {
     int ekranGry[windowHeight][windoWidth] = {0},
         ekranHud[hudHeight][windoWidth+1] = {0};
     ship.hp = 3;
+
+    if(musicON) system("start \"Music\" /MIN mainTheme.bat");
+
     displayMenu();
     system("cls");
     displayGame(ekranGry);
@@ -246,8 +249,20 @@ int main (int argc, char *argv[]) {
     //ascii();
     
 
-    //system("pause");
+    system("pause");
+    killMusic();
     return EXIT_SUCCESS;
+}
+
+void killMusic()
+{
+    if(musicON)
+    {
+        //system("taskkill /im wmplayer.exe /t /f");
+        //system("taskkill /FI \"WindowTitle eq Music*\" /T /F");
+        system("start \"Stop\" /MIN killMusic.bat");
+        system("taskkill /FI \"WindowTitle eq Stop*\" /F");
+    }
 }
 
 /*
