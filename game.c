@@ -10,19 +10,21 @@
 #define death "mainDeathSound.bat"
 
 //define kolorki
+#define DEFAULTC "\033[0m "
 #define RED "\033[1;31m"
+#define YELLOW "\033[0;33m"
 
 /*          *\
 |   OPTIONS  |
 \*          */          
 
 //Tryb wyswietlania
-#define displayMode "%c"
+#define displayMode "%2c"
 
 //rozmiary obszarow roboczych
 //rozmiar ekranu gry -> windowHeight x windowWidth
 //rozmiar HUD -> hudHeight x windowWidth
-#define windoWidth 21
+#define windoWidth 11
 #define windowHeight 15
 #define hudHeight 1
 #define maxEnemies windoWidth/2
@@ -82,6 +84,8 @@ void shootPlayer();
 void moveBullets();
 int moveAI();
 int isHit(enemy enemy, bullet bullet);
+int isHordeDead();
+void victory();
 
 //tworenie globalnie dostępnych: gracza, tablicy wrogów i tablicy pocisków
 player ship;
@@ -144,7 +148,7 @@ void displayGame(int ekran[][windoWidth]){
         printf(displayMode,219);
 
             for (int j = 0; j < windoWidth; j++){
-                if(ekran[i][j] == 0){printf(displayMode,ekran[i][j]+32);}
+                if(ekran[i][j] == 0){printf(displayMode, ' ');}
                 else if(ekran[i][j] == 5) printf(displayMode, '#');
                 else if(ekran[i][j] == 3) printf(displayMode, '&');
                 else if(ekran[i][j] == 4) printf(displayMode, '|');
@@ -332,6 +336,7 @@ Logika gry:
 void playGame()
 {
     char ruch = 0;
+    int aiCounter = 0;
     initializeGame();
 
     while(1)
@@ -342,31 +347,49 @@ void playGame()
         ruch = getch();
         switch (ruch)
         {
+            //lewo
             case 'a':
             movePlayer(-1);
             break;
 
+            //prawo
             case 'd':
             movePlayer(1);
             break;
 
+            //strzał
             case 'w':
             shootPlayer();
             break;
 
+            //na wypadek gdyby gra się nie skończyła można wyjść manualnie
             case 'q':
             return;
             break;
 
+            //ponów zapytanie o klawisz
             default:
             continue;
         }
 
         moveBullets();
-        if(moveAI() == 2) return;
+        aiCounter++;
+        if(aiCounter > 3)
+        {
+            aiCounter = 0;
+            if(moveAI() == 2) 
+                return;
+        }
+
+        if(isHordeDead() == 0)
+        {
+            victory();
+            return;
+        } 
     }
 }
 
+//inicjalizuje początkowe wartości gry
 void initializeGame()
 {
     fillEkran(0);
@@ -378,7 +401,7 @@ void initializeGame()
     {
         horde[i].position.x = (windoWidth/(maxEnemies)) * (i+1) - 1;
         horde[i].position.y = 2;
-        horde[i].hp = 1;
+        horde[i].hp = 1 * difficulty;
         horde[i].dead = 0;
 
         ekranGry[horde[i].position.y][horde[i].position.x] = 5;
@@ -388,11 +411,13 @@ void initializeGame()
     {
         bullets[i].position.x = 0;
         bullets[i].position.y = 0;
+        bullets[i].dmg = 1;
         bullets[i].speed = 1;
         bullets[i].hit = 1;
     }
 }
 
+//przesuwa gracza w lewo lub prawo
 void movePlayer(int move)
 {
     if(ship.position.x > 0 && ship.position.x < windoWidth)
@@ -403,6 +428,7 @@ void movePlayer(int move)
     }
 }
 
+//tworzy pocisk przed graczem
 void shootPlayer()
 {
     for (int i = 0; i < maxBullets; i++)
@@ -414,17 +440,26 @@ void shootPlayer()
             bullets[i].hit = 0;
 
             ekranGry[bullets[i].position.y][bullets[i].position.x] = 4;
+            break;
         }
     }
     
 }
 
+//przesuwa pociski i pokonuje wrogów
 void moveBullets()
 {
     for (int i = 0; i < maxBullets; i++)
     {
         if(bullets[i].hit == 0)
         {
+            if(bullets[i].position.y == 0) 
+            {
+                ekranGry[bullets[i].position.y][bullets[i].position.x] = 0;
+                bullets[i].hit = 1;
+                continue;
+            }
+
             ekranGry[bullets[i].position.y][bullets[i].position.x] = 0;
             bullets[i].position.y -= bullets[i].speed;
             ekranGry[bullets[i].position.y][bullets[i].position.x] = 4;
@@ -433,15 +468,22 @@ void moveBullets()
                 if(isHit(horde[j], bullets[i]) == 1)
                 {
                     horde[j].hp -= bullets[i].dmg;
+                    if(horde[j].hp <= 0) horde[j].dead = 1;
                     bullets[i].hit = 1;
+                    break;
                 }
             }
             
+        }
+        else if(bullets[i].position.y < windowHeight-2)
+        {
+            ekranGry[bullets[i].position.y][bullets[i].position.x] = 0;
         }
     }
     
 }
 
+//przesuwa wrogów
 int moveAI()
 {
     for (int i = 0; i < maxEnemies; i++)
@@ -461,12 +503,14 @@ int moveAI()
     }
 }
 
+//sprawdza czy wróg i pocisk są w tym samym miejscu i zwraca 1 jeśli tak
 int isHit(enemy enemy, bullet bullet)
 {
     if(enemy.position.x == bullet.position.x && enemy.position.y == bullet.position.y) return 1;
     else return 0; 
 }
 
+//wypełnia ekran podana cyfrą
 void fillEkran(int c)
 {
     for (int i = 0; i < windowHeight; i++)
@@ -476,4 +520,47 @@ void fillEkran(int c)
             ekranGry[i][j] = c;
         }
     }
+}
+
+//sprawdza czy jakiś wrój jeszcze nie jest dead i zwraca ich ilość
+int isHordeDead()
+{
+    int notdead = 0;
+    for (int i = 0; i < maxEnemies; i++)
+    {
+        if(horde[i].dead == 0) notdead++;
+    }
+    return notdead;
+}
+
+//akopiowana funkcja gameOver() z zmienionym napisem
+void victory()
+{
+    //Wygrana (najlepiej jakaś animacja)
+    int zmienna = 0,again = 0;
+
+    system("cls");    
+    printf(YELLOW);
+        
+    for (int i = 0; i < windowHeight+3; i++)
+    {
+        //printf("%2d",i);
+        if(i!=8){
+            for (int j = 0; j < windoWidth+2; j++)
+            {
+                printf("%c",177);
+            }
+        }
+        else
+        {
+            line(177,6,0);
+            printf("  VICTORY  ");
+            line(177,6,0);
+        }
+        printf("\n");    
+    }
+    printf("\n");
+    system("pause");
+    system("cls");   
+    printf(DEFAULTC);
 }
