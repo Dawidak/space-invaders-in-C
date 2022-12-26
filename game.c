@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
+#include <windows.h>
 
 //definy dotyczace dzwieku
 // Czy muzyka wlaczona 1 TRUE 0 FALSE
@@ -115,6 +116,7 @@ void ascii(){
 //menu
 //zraca wartosc typu int pozyskana od urzytkownika
 int displayMenu(){
+    system("cls");
     printf(displayMode,219);line(254,windoWidth+1,1);
     printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
     printf(displayMode,219);printf("     C INVADERS      ");printf(displayMode,219);printf("\n");
@@ -225,21 +227,19 @@ void gameWelcome(){
     {
         system("cls");
 
-        for (int j = 0; j < i; j++){printf("\n");}
+        for (int j = 0; j < i; j++){printf(" \n");}
         
-        printf("       C INVADERS       \n\n\n\n\n");
+        printf("       C INVADERS       ");
         
         if(i%2==0){system("color 70");}
         else{system("color 07");}
         
-        for (int j = 0; j < height-i; j++){printf("\n");}
+        for (int j = 0; j < height-i; j++){printf(" \n");}
         
-        system("timeout 1 > NUL");
+        Sleep(200);
     }
     system("color 07");
-    system("timeout 2 > NUL");
-    
-    
+    Sleep(2000);
 }
 
 //ekran game over
@@ -277,6 +277,7 @@ int main (int argc, char *argv[]) {
     ship.hp = 3;
 
     if(musicON) system("start \"Music\" /MIN mainTheme.bat");
+    gameWelcome();
 
     while(1){
         int wybor = displayMenu();
