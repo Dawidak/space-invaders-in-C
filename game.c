@@ -91,7 +91,7 @@ bullet bullets[maxBullets];
 int ekranGry[windowHeight][windoWidth] = {0},
     ekranHud[hudHeight][windoWidth] = {0};
 
-int difficulty;
+int difficulty = 1;
 
 //procedura do twarzenia linii poziomych
 // znak podaj w ascii
@@ -378,7 +378,7 @@ void initializeGame()
     {
         horde[i].position.x = (windoWidth/(maxEnemies)) * (i+1) - 1;
         horde[i].position.y = 2;
-        horde[i].hp = 1 * difficulty;
+        horde[i].hp = 1;
         horde[i].dead = 0;
 
         ekranGry[horde[i].position.y][horde[i].position.x] = 5;
@@ -411,6 +411,7 @@ void shootPlayer()
         {
             bullets[i].position.x = ship.position.x;
             bullets[i].position.y = ship.position.y-1;
+            bullets[i].hit = 0;
 
             ekranGry[bullets[i].position.y][bullets[i].position.x] = 4;
         }
@@ -443,9 +444,9 @@ void moveBullets()
 
 int moveAI()
 {
-    for (int i = 0; i < maxBullets; i++)
+    for (int i = 0; i < maxEnemies; i++)
     {
-        if(horde[i].hp > 0)
+        if(horde[i].dead == 0)
         {
             ekranGry[horde[i].position.y][horde[i].position.x] = 0;
             horde[i].position.y += 1;
