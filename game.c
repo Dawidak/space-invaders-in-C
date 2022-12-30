@@ -214,7 +214,9 @@ void displayHud(int hud[][windoWidth],int health){
 
     printf(displayMode,219);
     line(254,windoWidth+1,1);
-
+    
+    //debug position
+    //printf("%d", ship.position.x);
 }
 
 //ekran startowy dla gry
@@ -421,7 +423,19 @@ void initializeGame()
 //przesuwa gracza w lewo lub prawo
 void movePlayer(int move)
 {
-    if(ship.position.x > 0 && ship.position.x < windoWidth)
+    if(ship.position.x == 0 && move > 0)
+    {
+        ekranGry[ship.position.y][ship.position.x] = 0;
+        ship.position.x += move;
+        ekranGry[ship.position.y][ship.position.x] = 3;
+    }
+    else if(ship.position.x == windoWidth-1 && move < 0)
+    {
+        ekranGry[ship.position.y][ship.position.x] = 0;
+        ship.position.x += move;
+        ekranGry[ship.position.y][ship.position.x] = 3;
+    }
+    else if(ship.position.x > 0 && ship.position.x < windoWidth-1)
     {
         ekranGry[ship.position.y][ship.position.x] = 0;
         ship.position.x += move;
