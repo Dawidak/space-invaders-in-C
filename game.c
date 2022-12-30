@@ -257,14 +257,14 @@ void gameOver(){
         if(i!=8){
             for (int j = 0; j < windoWidth+2; j++)
             {
-                printf("%c",177);
+                printf(displayMode,177);
             }
         }
         else
         {
-            line(177,6,0);
-            printf(" GAME OVER ");
-            line(177,6,0);
+            line(177,4,0);
+            printf(" GAME OVER");
+            line(177,4,0);
         }
         printf("\n");    
     }
@@ -563,14 +563,14 @@ void victory()
         if(i!=8){
             for (int j = 0; j < windoWidth+2; j++)
             {
-                printf("%c",177);
+                printf(displayMode,177);
             }
         }
         else
         {
-            line(177,6,0);
-            printf("  VICTORY  ");
-            line(177,6,0);
+            line(177,4,0);
+            printf(" VICTORY  ");
+            line(177,4,0);
         }
         printf("\n");    
     }
