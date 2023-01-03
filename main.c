@@ -41,9 +41,7 @@ void generateGameEkran    (int ekran[][windowWidth]){}
 
 void generateWelcomeEkran (int ekran[][windowWidth]){}
 
-void generateHowEkran     (int ekran[][windowWidth]){
-    
-}
+void generateHowEkran     (int ekran[][windowWidth]){}
 
 
 int main (int argc, char *argv[]) {

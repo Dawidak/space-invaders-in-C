@@ -68,6 +68,7 @@ typedef struct{
 int displayMenu();
 void displayGame(int ekran[][windoWidth]);
 void displayHud(int hud[][windoWidth], int health);
+void howToPlay();
 
 //funkcje ogólne
 void gameWelcome();
@@ -287,7 +288,7 @@ int main (int argc, char *argv[]) {
         switch (wybor)
         {
             case '1':
-            //how to play
+            howToPlay();
             break;
             
             case '2':
@@ -578,4 +579,27 @@ void victory()
     system("pause");
     system("cls");   
     printf(DEFAULTC);
+}
+
+void howToPlay(){
+    system("cls");
+    printf(displayMode,219);line(254,windoWidth+1,1);
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("    How To Play      ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);line(254,windoWidth+1,1);
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("        %c - A        ",273);printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("        %c - D        ",272);printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("     Shoot - W       ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    for (int i = 0; i < 7; i++)
+    {
+        printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
+    }
+    printf(displayMode,219);line(254,windoWidth+1,1);
+    char input = '0';
+    input = getche();
+    //return input;
 }
