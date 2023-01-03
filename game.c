@@ -21,6 +21,9 @@
 
 //Tryb wyswietlania
 #define displayMode "%2c"
+#define enemyPixel '#'
+#define shipPixel '&'
+#define bulletPixel '|'
 
 //rozmiary obszarow roboczych
 //rozmiar ekranu gry -> windowHeight x windowWidth
@@ -152,9 +155,9 @@ void displayGame(int ekran[][windoWidth]){
 
             for (int j = 0; j < windoWidth; j++){
                 if(ekran[i][j] == 0){printf(displayMode, ' ');}
-                else if(ekran[i][j] == 5) printf(displayMode, '#');
-                else if(ekran[i][j] == 3) printf(displayMode, '&');
-                else if(ekran[i][j] == 4) printf(displayMode, '|');
+                else if(ekran[i][j] == 5) printf(displayMode, enemyPixel);
+                else if(ekran[i][j] == 3) printf(displayMode, shipPixel);
+                else if(ekran[i][j] == 4) printf(displayMode, bulletPixel);
                 else printf(displayMode,ekran[i][j]);
             }
         
