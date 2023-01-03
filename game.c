@@ -3,10 +3,11 @@
 #include <string.h>
 #include <conio.h>
 #include <windows.h>
+#include <time.h>
 
 //definy dotyczace dzwieku
 // Czy muzyka wlaczona 1 TRUE 0 FALSE
-#define musicON 1
+#define musicON 0
 #define musicLocation "mainTheme.bat"
 #define death "mainDeathSound.bat"
 
@@ -87,10 +88,11 @@ void initializeGame();
 void movePlayer(int move);
 void shootPlayer();
 void moveBullets();
-int moveAI();
+void moveAI();
 int isHit(enemy enemy, bullet bullet);
 int isHordeDead();
 void victory();
+void spawnEnemy();
 
 //tworenie globalnie dostępnych: gracza, tablicy wrogów i tablicy pocisków
 player ship;
@@ -280,8 +282,6 @@ void gameOver(){
 
 // tu testujemy funkcje lub odpalamy kombajn
 int main (int argc, char *argv[]) {
-    ship.hp = 3;
-
     if(musicON) system("start \"Music\" /MIN mainTheme.bat");
     gameWelcome();
 
@@ -343,14 +343,14 @@ Logika gry:
 void playGame()
 {
     char ruch = 0;
-    int aiCounter = 0;
+    int Counter = 0;
     initializeGame();
+
+    displayGame(ekranGry);
+    displayHud(ekranHud,ship.hp);
 
     while(1)
     {
-        displayGame(ekranGry);
-        displayHud(ekranHud,ship.hp);
-
         ruch = getch();
         switch (ruch)
         {
@@ -380,19 +380,26 @@ void playGame()
         }
 
         moveBullets();
-        aiCounter++;
-        if(aiCounter > 3)
+        if(Counter%3 == 0)
         {
-            aiCounter = 0;
-            if(moveAI() == 2) 
-                return;
+            moveAI();
+            spawnEnemy();
         }
 
         if(isHordeDead() == 0)
         {
             victory();
             return;
-        } 
+        }
+        else if(ship.hp <= 0)
+        {
+            gameOver();
+            return;
+        }
+
+        displayGame(ekranGry);
+        displayHud(ekranHud,ship.hp);
+        Counter += 1;
     }
 }
 
@@ -402,6 +409,7 @@ void initializeGame()
     fillEkran(0);
     ship.position.x = windoWidth/2;
     ship.position.y = windowHeight-1;
+    ship.hp = 3;
     ekranGry[ship.position.y][ship.position.x] = 3;
 
     for(int i = 0; i < maxEnemies; i++)
@@ -503,7 +511,7 @@ void moveBullets()
 }
 
 //przesuwa wrogów
-int moveAI()
+void moveAI()
 {
     for (int i = 0; i < maxEnemies; i++)
     {
@@ -515,8 +523,8 @@ int moveAI()
 
             if(horde[i].position.y >= windowHeight-1)
             {
-                gameOver();
-                return 2;
+                ship.hp -= 1;
+                horde[i].dead = 1;
             }
         }
     }
@@ -582,6 +590,24 @@ void victory()
     system("pause");
     system("cls");   
     printf(DEFAULTC);
+}
+
+//dodaje przeciwnika na początku planszy
+void spawnEnemy()
+{
+    srand(time(NULL));
+    for(int i = 0; i < maxEnemies; i++)
+    {
+        if(horde[i].dead == 1)
+        {
+            horde[i].position.x = rand()%windoWidth;
+            horde[i].position.y = 2;
+            horde[i].hp = 1 * difficulty;
+            horde[i].dead = 0;
+
+            ekranGry[horde[i].position.y][horde[i].position.x] = 5;
+        }
+    }
 }
 
 void howToPlay(){
