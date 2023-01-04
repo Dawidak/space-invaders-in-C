@@ -24,7 +24,8 @@
 #define displayMode "%2c"
 #define enemyPixel '#'
 #define shipPixel '&'
-#define bulletPixel '|'
+#define bulletPixel '*'
+#define explosionPixel '@'
 
 //rozmiary obszarow roboczych
 //rozmiar ekranu gry -> windowHeight x windowWidth
@@ -87,7 +88,8 @@ void line(int znak, int dlugosc, int newLine);
 void ascii();
 void fillEkran(int c);
 void addScore(int rounds);
-void readScores(); 
+void readScores();
+void difficultyChange();
 
 //funkcje mechaniki gry
 void playGame();
@@ -103,8 +105,8 @@ void spawnEnemy();
 
 //tworenie globalnie dostępnych: gracza, tablicy wrogów i tablicy pocisków
 player ship;
-enemy horde[maxEnemies];
-bullet bullets[maxBullets];
+enemy horde[maxEnemies] = {0};
+bullet bullets[maxBullets] = {0};
 
 int ekranGry[windowHeight][windoWidth] = {0},
     ekranHud[hudHeight][windoWidth] = {0};
@@ -167,6 +169,7 @@ void displayGame(int ekran[][windoWidth]){
                 else if(ekran[i][j] == 5) printf(displayMode, enemyPixel);
                 else if(ekran[i][j] == 3) printf(displayMode, shipPixel);
                 else if(ekran[i][j] == 4) printf(displayMode, bulletPixel);
+                else if(ekran[i][j] == 6) printf(displayMode, explosionPixel);
                 else printf(displayMode,ekran[i][j]);
             }
         
@@ -305,6 +308,7 @@ int main (int argc, char *argv[]) {
             break;
             
             case '2':
+            difficultyChange();
             playGame();
             break;
 
@@ -428,9 +432,9 @@ void initializeGame()
 
     for(int i = 0; i < windoWidth / 2; i++)
     {
-        horde[i].position.x = (windoWidth/(maxEnemies)) * (i+1) - 1;
+        horde[i].position.x = (windoWidth/(windoWidth / 2)) * (i+1) - 1;
         horde[i].position.y = 2;
-        horde[i].hp = 1 * difficulty;
+        horde[i].hp = 1;
         horde[i].dead = 0;
 
         ekranGry[horde[i].position.y][horde[i].position.x] = 5;
@@ -477,10 +481,10 @@ void shootPlayer()
         if(bullets[i].hit == 1)
         {
             bullets[i].position.x = ship.position.x;
-            bullets[i].position.y = ship.position.y-1;
+            bullets[i].position.y = ship.position.y;
             bullets[i].hit = 0;
 
-            ekranGry[bullets[i].position.y][bullets[i].position.x] = 4;
+            //ekranGry[bullets[i].position.y][bullets[i].position.x] = 4;
             break;
         }
     }
@@ -501,27 +505,30 @@ void moveBullets()
                 continue;
             }
 
-            ekranGry[bullets[i].position.y][bullets[i].position.x] = 0;
+            if(bullets[i].position.y != ship.position.y) 
+                ekranGry[bullets[i].position.y][bullets[i].position.x] = 0;
             bullets[i].position.y -= bullets[i].speed;
-            ekranGry[bullets[i].position.y][bullets[i].position.x] = 4;
+
             for (int j = 0; j < maxEnemies; j++)
             {
                 if(isHit(horde[j], bullets[i]) == 1)
                 {
                     horde[j].hp -= bullets[i].dmg;
                     if(horde[j].hp <= 0) horde[j].dead = 1;
-                    bullets[i].hit = 1;
+                    bullets[i].hit = 2;
+                    ekranGry[bullets[i].position.y][bullets[i].position.x] = 6;
                     break;
                 }
             }
-            
+            if(bullets[i].hit == 0)
+                ekranGry[bullets[i].position.y][bullets[i].position.x] = 4;
         }
-        else if(bullets[i].position.y < windowHeight-2)
+        else if(bullets[i].hit == 2)
         {
             ekranGry[bullets[i].position.y][bullets[i].position.x] = 0;
+            bullets[i].hit = 1;
         }
     }
-    
 }
 
 //przesuwa wrogów
@@ -533,12 +540,34 @@ void moveAI()
         {
             ekranGry[horde[i].position.y][horde[i].position.x] = 0;
             horde[i].position.y += 1;
-            ekranGry[horde[i].position.y][horde[i].position.x] = 5;
 
-            if(horde[i].position.y >= windowHeight-1)
+            //TODO: Losowa szansa na uniknięcie trafienia
+
+            //sprawdzanie czy czasem przeciwnik nie wleciał w pocisk
+            for (int j = 0; j < maxBullets; j++)
             {
-                ship.hp -= 1;
-                horde[i].dead = 1;
+                if(isHit(horde[i], bullets[j]) == 1)
+                {
+                    horde[i].hp -= bullets[j].dmg;
+                    if(horde[i].hp <= 0) horde[i].dead = 1;
+                    bullets[j].hit = 2;
+                    ekranGry[bullets[j].position.y][bullets[j].position.x] = 6;
+                    break;
+                }
+            }
+
+            if(horde[i].dead != 1)
+            {
+                if(horde[i].position.y >= ship.position.y)
+                {
+                    ship.hp -= 1;
+                    horde[i].dead = 1;
+                    horde[i].position.y = 0;
+                }
+                else
+                {
+                    ekranGry[horde[i].position.y][horde[i].position.x] = 5;
+                }
             }
         }
     }
@@ -714,6 +743,8 @@ void readScores()
         scores[number-1].points = bscore[0].points;
     }
 
+    //TODO: Sortowanie
+
     for(int i = 0; i < number; i++)
     {
         line(254, windoWidth+1, 1);
@@ -723,4 +754,40 @@ void readScores()
     system("pause");
     fclose(file);
     free(scores);
+}
+
+void difficultyChange()
+{
+    printf("Choose dificulty\n [1]Easy\n [2]Normal\n [3]Hard\n [4]Endless\n");
+    char wybor = getch();
+
+    do
+    {
+        switch (wybor)
+        {
+            case '1':
+            difficulty = 1;
+            return;
+            break;
+            
+            case '2':
+            difficulty = 2;
+            return;
+            break;
+
+            case '3':
+            difficulty = 3;
+            return;
+            break;
+
+            case '4':
+            difficulty = 4;
+            return;
+            break;
+
+            default:
+            printf("Wrong number!");
+            break;
+        }
+    } while (1);
 }
