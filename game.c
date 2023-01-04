@@ -7,7 +7,7 @@
 
 //definy dotyczace dzwieku
 // Czy muzyka wlaczona 1 TRUE 0 FALSE
-#define musicON 0
+#define musicON 1
 #define musicLocation "mainTheme.bat"
 #define death "mainDeathSound.bat"
 
@@ -287,8 +287,6 @@ void gameOver(int rounds){
     printf("\n");
     printf(DEFAULTC);
     addScore(rounds);
-
-    system("pause");
     system("cls");   
     printf("\033[0m ");
 }
@@ -308,7 +306,7 @@ int main (int argc, char *argv[]) {
             break;
             
             case '2':
-            difficultyChange();
+            //difficultyChange();
             playGame();
             break;
 
@@ -399,7 +397,7 @@ void playGame()
             moveAI();
         }
 
-        if(Counter%(6/difficulty) == 0)
+        if(Counter%(12/difficulty) == 0)
         {
             spawnEnemy();
         }
@@ -632,8 +630,6 @@ void victory(int rounds)
     printf("\n");
     printf(DEFAULTC);
     addScore(rounds);
-
-    system("pause");
     system("cls");   
     printf(DEFAULTC);
 }
@@ -745,11 +741,15 @@ void readScores()
 
     //TODO: Sortowanie
 
+    printf(displayMode,219);line(254, 12, 1);
     for(int i = 0; i < number; i++)
     {
-        line(254, windoWidth+1, 1);
-        printf("%11s | %5d\n", scores[i].name, scores[i].points);
+        printf(displayMode,219);
+        printf(" %11s | %5d  ", scores[i].name, scores[i].points);
+        printf(displayMode,219);
+        printf("\n");
     }
+    printf(displayMode,219);line(254, 12, 1);
 
     system("pause");
     fclose(file);
