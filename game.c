@@ -12,7 +12,7 @@
 #define death "mainDeathSound.bat"
 
 //define kolorki
-#define DEFAULTC "\033[0m "
+#define DEFAULTC "\033[0m"
 #define RED "\033[1;31m"
 #define YELLOW "\033[0;33m"
 
@@ -68,6 +68,11 @@ typedef struct{
     int hit;
 } bullet;
 
+typedef struct{
+    char name[15];
+    int points;
+} score;
+
 //funkcje wyświetlające
 int displayMenu();
 void displayGame(int ekran[][windoWidth]);
@@ -76,11 +81,13 @@ void howToPlay();
 
 //funkcje ogólne
 void gameWelcome();
-void gameOver();
+void gameOver(int rounds);
 void killMusic();
 void line(int znak, int dlugosc, int newLine);
 void ascii();
 void fillEkran(int c);
+void addScore(int rounds);
+void readScores(); 
 
 //funkcje mechaniki gry
 void playGame();
@@ -91,7 +98,7 @@ void moveBullets();
 void moveAI();
 int isHit(enemy enemy, bullet bullet);
 int isHordeDead();
-void victory();
+void victory(int rounds);
 void spawnEnemy();
 
 //tworenie globalnie dostępnych: gracza, tablicy wrogów i tablicy pocisków
@@ -251,7 +258,7 @@ void gameWelcome(){
 }
 
 //ekran game over
-void gameOver(){
+void gameOver(int rounds){
     int zmienna = 0,again = 0;
 
     system("cls");    
@@ -274,6 +281,9 @@ void gameOver(){
         }
         printf("\n");    
     }
+
+    addScore(rounds);
+
     printf("\n");
     system("pause");
     system("cls");   
@@ -299,7 +309,7 @@ int main (int argc, char *argv[]) {
             break;
 
             case '3':
-            //scoreboard
+            readScores();
             break;
 
             case '4':
@@ -388,12 +398,12 @@ void playGame()
 
         if(isHordeDead() == 0)
         {
-            victory();
+            victory(Counter);
             return;
         }
         else if(ship.hp <= 0)
         {
-            gameOver();
+            gameOver(Counter);
             return;
         }
 
@@ -561,10 +571,10 @@ int isHordeDead()
 }
 
 //akopiowana funkcja gameOver() z zmienionym napisem
-void victory()
+void victory(int rounds)
 {
     //Wygrana (najlepiej jakaś animacja)
-    int zmienna = 0,again = 0;
+    int zmienna = 0, again = 0;
 
     system("cls");    
     printf(YELLOW);
@@ -587,6 +597,9 @@ void victory()
         printf("\n");    
     }
     printf("\n");
+
+    addScore(rounds);
+
     system("pause");
     system("cls");   
     printf(DEFAULTC);
@@ -631,4 +644,78 @@ void howToPlay(){
     char input = '0';
     input = getche();
     //return input;
+}
+
+void addScore(int rounds)
+{
+    char name[15] = {0};
+    char wybor;
+    score bscore[1] = {"NUNAME", 0};
+    do{
+        printf("Type your name (max 10 characters): ");
+        scanf("%s", name);
+        if(strlen(name) < 10)
+        {
+            printf("Is %s your name? [Y / N]\n", name);
+            fflush(stdin);
+            wybor = getchar();
+
+            if(wybor == 'Y') break;
+            else if(wybor == 'N') continue;
+            else printf("Try again.\n");
+        }
+    }while(1);
+
+    strcpy(bscore[0].name, name);
+    if(ship.hp > 0) bscore[0].points = rounds * ship.hp;
+    else bscore[0].points = rounds;
+
+    FILE *file = fopen("scores.bin", "a");
+    if(file == NULL)
+    {
+        printf(RED);
+        printf("ERROR Can't save score\n");
+        printf(DEFAULTC);
+        system("pause");
+    }
+    else
+    {
+        fwrite(bscore, sizeof(score), 1, file);
+        fclose(file);
+    }
+}
+
+void readScores()
+{
+    score bscore[1];
+    score *scores;
+    int number = 0;
+
+    scores = (score*) calloc(1, sizeof(score));
+
+    FILE *file = fopen("scores.bin", "r");
+    if(file == NULL)
+    {
+        printf("There are no previous scores or can't open file\n");
+        system("pause");
+        return;
+    }
+
+    while(fread(bscore, sizeof(bscore), 1, file) == 1){
+        number += 1;
+
+        scores = (score*) realloc(scores, sizeof(score) * number);
+        strcpy(scores[number-1].name, bscore[0].name);
+        scores[number-1].points = bscore[0].points;
+    }
+
+    for(int i = 0; i < number; i++)
+    {
+        line(254, windoWidth+1, 1);
+        printf("%11s | %5d\n", scores[i].name, scores[i].points);
+    }
+
+    system("pause");
+    fclose(file);
+    free(scores);
 }
