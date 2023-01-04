@@ -32,7 +32,7 @@
 #define windoWidth 11
 #define windowHeight 15
 #define hudHeight 1
-#define maxEnemies windoWidth/2
+#define maxEnemies windoWidth * 2
 #define maxBullets 20
 
 typedef struct{
@@ -138,9 +138,9 @@ int displayMenu(){
     printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
     printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
     printf(displayMode,219);printf("  1.How to Play      ");printf(displayMode,219);printf("\n");
-    printf(displayMode,219);printf("  2.Graj             ");printf(displayMode,219);printf("\n");
-    printf(displayMode,219);printf("  3.Ostatni wynik    ");printf(displayMode,219);printf("\n");
-    printf(displayMode,219);printf("  4.Wyjdz            ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("  2.Play             ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("  3.Scores           ");printf(displayMode,219);printf("\n");
+    printf(displayMode,219);printf("  4.Exit             ");printf(displayMode,219);printf("\n");
     for (int i = 0; i < 7; i++)
     {
         printf(displayMode,219);printf("                     ");printf(displayMode,219);printf("\n");
@@ -281,10 +281,10 @@ void gameOver(int rounds){
         }
         printf("\n");    
     }
-
+    printf("\n");
+    printf(DEFAULTC);
     addScore(rounds);
 
-    printf("\n");
     system("pause");
     system("cls");   
     printf("\033[0m ");
@@ -393,6 +393,10 @@ void playGame()
         if(Counter%3 == 0)
         {
             moveAI();
+        }
+
+        if(Counter%(6/difficulty) == 0)
+        {
             spawnEnemy();
         }
 
@@ -422,7 +426,7 @@ void initializeGame()
     ship.hp = 3;
     ekranGry[ship.position.y][ship.position.x] = 3;
 
-    for(int i = 0; i < maxEnemies; i++)
+    for(int i = 0; i < windoWidth / 2; i++)
     {
         horde[i].position.x = (windoWidth/(maxEnemies)) * (i+1) - 1;
         horde[i].position.y = 2;
@@ -597,7 +601,7 @@ void victory(int rounds)
         printf("\n");    
     }
     printf("\n");
-
+    printf(DEFAULTC);
     addScore(rounds);
 
     system("pause");
@@ -619,6 +623,7 @@ void spawnEnemy()
             horde[i].dead = 0;
 
             ekranGry[horde[i].position.y][horde[i].position.x] = 5;
+            break;
         }
     }
 }
