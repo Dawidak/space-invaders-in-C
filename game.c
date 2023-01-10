@@ -428,6 +428,14 @@ void initializeGame()
     ship.hp = 3;
     ekranGry[ship.position.y][ship.position.x] = 3;
 
+    for (int i = 0; i < maxEnemies; i++)
+    {
+        horde[i].position.x = 0;
+        horde[i].position.y = 0;
+        horde[i].hp = 0;
+        horde[i].dead = 1;
+    }
+
     for(int i = 0; i < windoWidth / 2; i++)
     {
         horde[i].position.x = (windoWidth/(windoWidth / 2)) * (i+1) - 1;
@@ -509,10 +517,14 @@ void moveBullets()
 
             for (int j = 0; j < maxEnemies; j++)
             {
-                if(isHit(horde[j], bullets[i]) == 1)
+                if(isHit(horde[j], bullets[i]) == 1 && horde[j].dead == 0)
                 {
                     horde[j].hp -= bullets[i].dmg;
-                    if(horde[j].hp <= 0) horde[j].dead = 1;
+                    if(horde[j].hp <= 0) 
+                    {
+                        horde[j].dead = 1;
+                        horde[j].position.y = 0;
+                    }
                     bullets[i].hit = 2;
                     ekranGry[bullets[i].position.y][bullets[i].position.x] = 6;
                     break;
@@ -544,10 +556,14 @@ void moveAI()
             //sprawdzanie czy czasem przeciwnik nie wleciał w pocisk
             for (int j = 0; j < maxBullets; j++)
             {
-                if(isHit(horde[i], bullets[j]) == 1)
+                if(isHit(horde[i], bullets[j]) == 1 && bullets[j].hit == 0)
                 {
                     horde[i].hp -= bullets[j].dmg;
-                    if(horde[i].hp <= 0) horde[i].dead = 1;
+                    if(horde[i].hp <= 0)
+                    {
+                        horde[i].dead = 1;
+                        horde[j].position.y = 0;
+                    }
                     bullets[j].hit = 2;
                     ekranGry[bullets[j].position.y][bullets[j].position.x] = 6;
                     break;
@@ -642,7 +658,7 @@ void spawnEnemy()
     {
         if(horde[i].dead == 1)
         {
-            horde[i].position.x = rand()%windoWidth;
+            horde[i].position.x = (rand()%(windoWidth-2)) + 1;
             horde[i].position.y = 2;
             horde[i].hp = 1 * difficulty;
             horde[i].dead = 0;
